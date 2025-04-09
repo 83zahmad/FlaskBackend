@@ -3,8 +3,10 @@ from app.services.auth_service import register_user, login_user
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/signup', methods=['POST'])
+@auth_bp.route('/signup', methods=['POST', 'OPTIONS'])
 def signup():
+    if request.method == 'OPTIONS':
+        return '', 204
     data = request.get_json()
     username = data.get('username')
     email = data.get('email')

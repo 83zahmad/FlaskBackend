@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_cors import CORS
 from app.config import Config
 
 db = SQLAlchemy()
@@ -16,6 +17,16 @@ def create_app(config_class=Config):
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
+    
+    # Configure CORS with more permissive settings
+    CORS(app, 
+     resources={r"/api/*": {
+         "origins": ["http://localhost:3000", "http://localhost:3000/products"],
+         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+         "allow_headers": ["Content-Type", "Authorization"],
+         "supports_credentials": True
+     }})
+
 
     # Register blueprints
     from app.routes.auth_routes import auth_bp
